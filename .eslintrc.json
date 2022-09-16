@@ -17,6 +17,8 @@
   },
   "plugins": ["@typescript-eslint", "prettier"],
   "rules": {
-    "prettier/prettier": "error"
+    "prettier/prettier": "error",
+    "no-case-declarations": "off",
+    "no-constant-condition": "off"
   }
 }

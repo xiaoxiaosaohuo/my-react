@@ -4,6 +4,7 @@ export type Key = string | null;
 
 export type Props = {
   [key: string]: any;
+  children?: ReactElement;
 };
 
 export interface ReactElement {
