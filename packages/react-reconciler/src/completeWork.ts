@@ -1,8 +1,17 @@
 import { FiberNode } from "./fiber";
 import { NoFlags } from "./fiberFlags";
-import { appendInitialChild, createInstance, Instance } from "./hostConfig";
-import { HostComponent, HostRoot } from "./workTags";
-
+import {
+  appendInitialChild,
+  createInstance,
+  createTextInstance,
+  Instance,
+} from "./hostConfig";
+import {
+  FunctionComponent,
+  HostComponent,
+  HostRoot,
+  HostText,
+} from "./workTags";
 const appendAllChildren = (parent: Instance, workInProgress: FiberNode) => {
   // traverse workInProgress children, append them to parent;
   //   along one branch, go to the leaf node, if this node is hostComponent, append it to parent
@@ -12,7 +21,7 @@ const appendAllChildren = (parent: Instance, workInProgress: FiberNode) => {
   let node = workInProgress.child;
   while (node != null) {
     // handle traverse, until node is null
-    if (node.tag === HostComponent) {
+    if (node.tag === HostComponent || node.tag === HostText) {
       // mount
       appendInitialChild(parent, node.stateNode);
     } else if (node.child !== null) {
@@ -52,6 +61,7 @@ const bubbleProperties = (completeWork: FiberNode) => {
 };
 
 export const completeWork = (workInProgress: FiberNode) => {
+  const newProps = workInProgress.pendingProps;
   switch (workInProgress.tag) {
     case HostComponent:
       // initial DOM
@@ -69,7 +79,16 @@ export const completeWork = (workInProgress: FiberNode) => {
       return null;
     case HostRoot:
       bubbleProperties(workInProgress);
-
+      return null;
+    case HostText:
+      const textInstance = createTextInstance(newProps.content);
+      workInProgress.stateNode = textInstance;
+      // bubble flag
+      bubbleProperties(workInProgress);
+      return null;
+    case FunctionComponent:
+      bubbleProperties(workInProgress);
+      return null;
     default:
       console.error("not implement in completeWork");
       return null;

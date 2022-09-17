@@ -2,7 +2,13 @@ import { ReactElement } from "shared/ReactTypes";
 import { mountChildFibers, reconcileChildFibers } from "./childFiber";
 import { FiberNode } from "./fiber";
 import { processUpdateQueue } from "./updateQueue";
-import { HostComponent, HostRoot } from "./workTags";
+import {
+  FunctionComponent,
+  HostComponent,
+  HostRoot,
+  HostText,
+} from "./workTags";
+import { renderWithHooks } from "./fiberHooks";
 
 /**
  * 1. create fiberNode based on workTags
@@ -16,6 +22,10 @@ export const beginWork = (workInProgress: FiberNode) => {
       return updateHostRoot(workInProgress);
     case HostComponent:
       return updateHostComponent(workInProgress);
+    case FunctionComponent:
+      return updateFunctionComponent(workInProgress);
+    case HostText:
+      return null;
     default:
       console.error("not implement in beginWork");
       return null;
@@ -29,9 +39,16 @@ function updateHostRoot(workInProgress: FiberNode) {
   reconcileChildren(workInProgress, nextChildren);
   return workInProgress.child;
 }
+
 function updateHostComponent(workInProgress: FiberNode) {
   const nextProps = workInProgress.pendingProps;
   const nextChildren = nextProps.children;
+  reconcileChildren(workInProgress, nextChildren);
+  return workInProgress.child;
+}
+
+function updateFunctionComponent(workInProgress: FiberNode) {
+  const nextChildren = renderWithHooks(workInProgress);
   reconcileChildren(workInProgress, nextChildren);
   return workInProgress.child;
 }
