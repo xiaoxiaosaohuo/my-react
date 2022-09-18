@@ -1,5 +1,8 @@
 {
   "name": "shared",
   "version": "0.0.0",
-  "description": "shared modules"
+  "description": "shared modules",
+  "dependencies": {
+    "react": "workspace:*"
+  }
 }

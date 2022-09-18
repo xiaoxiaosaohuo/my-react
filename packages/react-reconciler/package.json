@@ -8,7 +8,8 @@
   },
   "dependencies": {
     "shared": "workspace:*",
-    "react-dom": "workspace:*"
+    "react-dom": "workspace:*",
+    "react": "workspace:*"
   },
   "keywords": [],
   "author": "",

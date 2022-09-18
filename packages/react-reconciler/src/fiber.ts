@@ -20,7 +20,7 @@ export class FiberNode {
   child: FiberNode | null;
   index: number;
 
-  updateQueue: UpdateQueue | null;
+  updateQueue: unknown;
 
   memoizedState: any;
 
